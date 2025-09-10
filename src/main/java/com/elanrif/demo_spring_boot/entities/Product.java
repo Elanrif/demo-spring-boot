@@ -6,14 +6,13 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 import java.time.LocalDateTime;
-
 @NoArgsConstructor
 @AllArgsConstructor
 @Data
-@Entity // JPA,This will create a table named "product" in the database
+@Entity
 public class Product {
-    @Id // Primary Key
-    @GeneratedValue(strategy = GenerationType.IDENTITY) // Automatic Increment
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer id;
     private String name;
     private Double price;

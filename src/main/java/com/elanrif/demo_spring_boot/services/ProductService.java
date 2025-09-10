@@ -21,8 +21,7 @@ public class ProductService implements ProductServiceImpl {
     public Product updateProduct(Integer id, Product product) {
         Product updateProduct = productRepository.findById(id).orElse(null);
         if (updateProduct == null) {
-
-            return null;
+            throw new RuntimeException("Product not found");
         }
         updateProduct.setName(product.getName());
         updateProduct.setPrice(product.getPrice());
@@ -44,5 +43,14 @@ public class ProductService implements ProductServiceImpl {
     @Override
     public List<Product> getAllProducts() {
         return productRepository.findAll();
+    }
+
+    @Override
+    public Product getProductById(Integer id) {
+        Product product = productRepository.findById(id).orElse(null);
+        if (product == null) {
+            throw new RuntimeException("Product not found");
+        }
+       return product;
     }
 }
