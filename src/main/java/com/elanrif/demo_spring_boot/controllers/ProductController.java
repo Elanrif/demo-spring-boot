@@ -36,4 +36,14 @@ public class ProductController {
     public Product getProductById(@PathVariable("id") Integer id) {
         return productService.getProductById(id);
     }
+
+    @GetMapping("/byName")
+    public List<Product> findByProductName(@RequestParam("name") String name) {
+        return productService.findByProductName(name);
+    }
+
+    @GetMapping("/byPrice")
+    public List<Product> findByPriceIsGreaterThanEqual(@RequestParam("price") Double price){
+        return productService.findByPriceIsGreaterThanEqual(price);
+    }
 }

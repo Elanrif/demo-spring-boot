@@ -13,7 +13,7 @@ import java.time.LocalDateTime;
 public class Product {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Integer id;
+    private Integer productID;
     private String name;
     private Double price;
     private String description;

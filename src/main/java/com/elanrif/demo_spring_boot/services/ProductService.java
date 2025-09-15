@@ -53,4 +53,14 @@ public class ProductService implements ProductServiceImpl {
         }
        return product;
     }
+
+    @Override
+    public List<Product> findByProductName(String name) {
+        return productRepository.findByName(name);
+    }
+
+    @Override
+    public List<Product> findByPriceIsGreaterThanEqual(Double price) {
+        return productRepository.findByPriceIsGreaterThanEqual(price);
+    }
 }
