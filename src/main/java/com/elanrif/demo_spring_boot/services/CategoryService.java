@@ -28,7 +28,6 @@ public class CategoryService implements CategoryServiceImpl {
         updateCategory.setCreatedAt(category.getCreatedAt());
         updateCategory.setCreatedAt(category.getCreatedAt());
         return categoryRepository.save(updateCategory);
-
     }
 
     @Override
