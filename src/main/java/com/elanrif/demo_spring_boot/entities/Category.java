@@ -18,10 +18,10 @@ import java.time.LocalDateTime;
 public class Category {
     @Id // Primary Key
     @GeneratedValue(strategy = GenerationType.IDENTITY) // Automatic Increment
-    private Integer schoolID;
+    private Integer id;
     private String name;
     private String description;
-    @CurrentTimestamp
+    @CreationTimestamp
     private LocalDateTime createdAt;
     @UpdateTimestamp
     private LocalDateTime updatedAt;

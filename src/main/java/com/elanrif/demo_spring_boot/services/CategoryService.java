@@ -25,8 +25,6 @@ public class CategoryService implements CategoryServiceImpl {
         }
         updateCategory.setName( category.getName());
         updateCategory.setDescription(category.getDescription());
-        updateCategory.setCreatedAt(category.getCreatedAt());
-        updateCategory.setCreatedAt(category.getCreatedAt());
         return categoryRepository.save(updateCategory);
     }
 
