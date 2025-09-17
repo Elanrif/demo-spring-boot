@@ -1,6 +1,7 @@
 package com.elanrif.demo_spring_boot.controllers;
 
 import com.elanrif.demo_spring_boot.dto.ProductCreateDto;
+import com.elanrif.demo_spring_boot.dto.ProductDto;
 import com.elanrif.demo_spring_boot.entities.Product;
 import com.elanrif.demo_spring_boot.services.ProductService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -46,5 +47,15 @@ public class ProductController {
     @GetMapping("/byPrice")
     public List<Product> findByPriceIsGreaterThanEqual(@RequestParam("price") Double price){
         return productService.findByPriceIsGreaterThanEqual(price);
+    }
+
+    @GetMapping("/dto")
+    public List<ProductDto> getAllProductDtos() {
+        return productService.getAllDtoProducts();
+    }
+
+    @GetMapping("/dto/{id}")
+    public ProductDto getProductDtoById(@PathVariable("id") Integer id) {
+        return productService.getProductDtoById(id);
     }
 }

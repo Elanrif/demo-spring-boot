@@ -1,14 +1,17 @@
 package com.elanrif.demo_spring_boot.services;
 
 import com.elanrif.demo_spring_boot.dto.ProductCreateDto;
+import com.elanrif.demo_spring_boot.dto.ProductDto;
 import com.elanrif.demo_spring_boot.entities.Category;
 import com.elanrif.demo_spring_boot.entities.Product;
 import com.elanrif.demo_spring_boot.mapper.ProductMapper;
+import com.elanrif.demo_spring_boot.mapper.ProductReadMapper;
 import com.elanrif.demo_spring_boot.repository.CategoryRepository;
 import com.elanrif.demo_spring_boot.repository.ProductRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.ArrayList;
 import java.util.List;
 
 @Service
@@ -19,6 +22,8 @@ public class ProductService implements ProductServiceImpl {
     private CategoryRepository categoryRepository;
     @Autowired
     private ProductMapper productMapper;
+    @Autowired
+    private ProductReadMapper productReadMapper;
 
     @Override
     public Product createProduct(ProductCreateDto productCreateDto) {
@@ -28,7 +33,6 @@ public class ProductService implements ProductServiceImpl {
         }
         Product p = productMapper.toEntity(productCreateDto);
         p.setCategory(category);
-
         return productRepository.save(p);
     }
 
@@ -66,6 +70,22 @@ public class ProductService implements ProductServiceImpl {
             throw new RuntimeException("Product not found");
         }
        return product;
+    }
+
+    @Override
+    public List<ProductDto> getAllDtoProducts() {
+        List<Product> pr = productRepository.findAll();
+        List<ProductDto> dtoList = new ArrayList<>();
+        for (Product product : pr) {
+            dtoList.add(productReadMapper.toDto(product));
+        }
+        return dtoList;
+    }
+
+    @Override
+    public ProductDto getProductDtoById(Integer id) {
+        Product pr = productRepository.findById(id).orElse(null);
+        return productReadMapper.toDto(pr);
     }
 
     @Override
