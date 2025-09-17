@@ -21,7 +21,7 @@ public class Category {
     @Id // Primary Key
     @GeneratedValue(strategy = GenerationType.IDENTITY) // Automatic Increment
     private Integer id;
-    @OneToMany(mappedBy = "category", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+    @OneToMany(mappedBy = "category")
     private List<Product> products;
     private String name;
     private String description;
