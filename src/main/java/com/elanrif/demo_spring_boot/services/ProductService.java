@@ -1,6 +1,9 @@
 package com.elanrif.demo_spring_boot.services;
 
+import com.elanrif.demo_spring_boot.dto.ProductCreateDto;
+import com.elanrif.demo_spring_boot.entities.Category;
 import com.elanrif.demo_spring_boot.entities.Product;
+import com.elanrif.demo_spring_boot.repository.CategoryRepository;
 import com.elanrif.demo_spring_boot.repository.ProductRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -11,10 +14,23 @@ import java.util.List;
 public class ProductService implements ProductServiceImpl {
     @Autowired
     private ProductRepository productRepository;
+    @Autowired
+    private CategoryRepository categoryRepository;
 
     @Override
-    public Product createProduct(Product product) {
-        return productRepository.save(product);
+    public Product createProduct(ProductCreateDto productCreateDto) {
+        Category category = categoryRepository.findById(productCreateDto.getCategoryId()).orElse(null);
+        if (category == null) {
+            throw new RuntimeException("Category not found");
+        }
+        Product p = new Product();
+        p.setName(productCreateDto.getName());
+        p.setPrice(productCreateDto.getPrice());
+        p.setDescription(productCreateDto.getDescription());
+        p.setStock(productCreateDto.getStock());
+        p.setCategory(category);
+
+        return productRepository.save(p);
     }
 
     @Override

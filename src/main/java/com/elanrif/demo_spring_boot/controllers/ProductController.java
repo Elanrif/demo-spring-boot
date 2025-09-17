@@ -1,5 +1,6 @@
 package com.elanrif.demo_spring_boot.controllers;
 
+import com.elanrif.demo_spring_boot.dto.ProductCreateDto;
 import com.elanrif.demo_spring_boot.entities.Product;
 import com.elanrif.demo_spring_boot.services.ProductService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -13,8 +14,8 @@ public class ProductController {
     ProductService productService;
 
     @PostMapping
-    public Product createProduct(@RequestBody Product product) {
-        return productService.createProduct(product);
+    public Product createProduct(@RequestBody ProductCreateDto productCreateDto) {
+        return productService.createProduct(productCreateDto);
     }
 
     @PutMapping("/{ID}")

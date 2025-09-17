@@ -1,14 +1,12 @@
 package com.elanrif.demo_spring_boot.entities;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
-import jdk.jfr.Timestamp;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import org.hibernate.annotations.CreationTimestamp;
-import org.hibernate.annotations.CurrentTimestamp;
 import org.hibernate.annotations.UpdateTimestamp;
-import org.springframework.data.annotation.CreatedDate;
 
 import java.time.LocalDateTime;
 import java.util.List;
@@ -22,6 +20,7 @@ public class Category {
     @GeneratedValue(strategy = GenerationType.IDENTITY) // Automatic Increment
     private Integer id;
     @OneToMany(mappedBy = "category")
+    @JsonIgnore
     private List<Product> products;
     private String name;
     private String description;
