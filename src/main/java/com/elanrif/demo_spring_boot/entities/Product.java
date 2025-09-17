@@ -16,6 +16,8 @@ public class Product {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer id;
+    @ManyToOne
+    private Category category;
     private String name;
     private Double price;
     private String description;

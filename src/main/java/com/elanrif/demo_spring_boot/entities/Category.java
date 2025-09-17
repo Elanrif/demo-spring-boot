@@ -11,6 +11,8 @@ import org.hibernate.annotations.UpdateTimestamp;
 import org.springframework.data.annotation.CreatedDate;
 
 import java.time.LocalDateTime;
+import java.util.List;
+
 @NoArgsConstructor
 @AllArgsConstructor
 @Data
@@ -19,6 +21,8 @@ public class Category {
     @Id // Primary Key
     @GeneratedValue(strategy = GenerationType.IDENTITY) // Automatic Increment
     private Integer id;
+    @OneToMany(mappedBy = "category", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+    private List<Product> products;
     private String name;
     private String description;
     @CreationTimestamp
