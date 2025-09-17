@@ -3,6 +3,7 @@ package com.elanrif.demo_spring_boot.services;
 import com.elanrif.demo_spring_boot.dto.ProductCreateDto;
 import com.elanrif.demo_spring_boot.entities.Category;
 import com.elanrif.demo_spring_boot.entities.Product;
+import com.elanrif.demo_spring_boot.mapper.ProductMapper;
 import com.elanrif.demo_spring_boot.repository.CategoryRepository;
 import com.elanrif.demo_spring_boot.repository.ProductRepository;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -16,6 +17,8 @@ public class ProductService implements ProductServiceImpl {
     private ProductRepository productRepository;
     @Autowired
     private CategoryRepository categoryRepository;
+    @Autowired
+    private ProductMapper productMapper;
 
     @Override
     public Product createProduct(ProductCreateDto productCreateDto) {
@@ -23,11 +26,7 @@ public class ProductService implements ProductServiceImpl {
         if (category == null) {
             throw new RuntimeException("Category not found");
         }
-        Product p = new Product();
-        p.setName(productCreateDto.getName());
-        p.setPrice(productCreateDto.getPrice());
-        p.setDescription(productCreateDto.getDescription());
-        p.setStock(productCreateDto.getStock());
+        Product p = productMapper.toEntity(productCreateDto);
         p.setCategory(category);
 
         return productRepository.save(p);
