@@ -1,6 +1,6 @@
-package com.elanrif.demo_spring_boot.repository;
+package com.elanrif.inventory_management.repository;
 
-import com.elanrif.demo_spring_boot.entities.Category;
+import com.elanrif.inventory_management.entities.Category;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 

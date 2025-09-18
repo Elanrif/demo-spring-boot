@@ -1,6 +1,6 @@
-package com.elanrif.demo_spring_boot.services;
+package com.elanrif.inventory_management.services;
 
-import com.elanrif.demo_spring_boot.entities.Category;
+import com.elanrif.inventory_management.entities.Category;
 
 import java.util.List;
 

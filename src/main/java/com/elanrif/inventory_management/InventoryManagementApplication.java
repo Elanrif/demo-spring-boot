@@ -1,11 +1,11 @@
-package com.elanrif.demo_spring_boot;
+package com.elanrif.inventory_management;
 
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 
 @SpringBootApplication
-public class DemoSpringBootApplication {
+public class InventoryManagementApplication {
 	public static void main(String[] args) {
-		SpringApplication.run(DemoSpringBootApplication.class, args);
+		SpringApplication.run(InventoryManagementApplication.class, args);
 	}
 }

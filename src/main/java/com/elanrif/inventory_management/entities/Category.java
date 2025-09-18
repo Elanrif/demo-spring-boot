@@ -1,4 +1,4 @@
-package com.elanrif.demo_spring_boot.entities;
+package com.elanrif.inventory_management.entities;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;

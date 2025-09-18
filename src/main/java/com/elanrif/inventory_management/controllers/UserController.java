@@ -1,0 +1,37 @@
+package com.elanrif.inventory_management.controllers;
+
+import com.elanrif.inventory_management.dto.UserDto;
+import com.elanrif.inventory_management.dto.UserReqDto;
+import com.elanrif.inventory_management.entities.User;
+import com.elanrif.inventory_management.services.UserService;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.web.bind.annotation.*;
+
+import java.util.List;
+
+@RestController
+@RequestMapping("/api/users")
+public class UserController {
+    @Autowired
+    private UserService userService;
+
+    @GetMapping
+    public List<UserDto> getAllUsers() {
+        return userService.getAllUsers();
+    }
+
+    @GetMapping("/{id}")
+    public UserDto getUserById(@PathVariable Long id) {
+        return userService.getUserById(id);
+    }
+
+    @PostMapping("/register")
+    public User register(@RequestBody UserReqDto userReqDto) {
+        return userService.register(userReqDto);
+    }
+
+    @PostMapping("/login")
+    public UserDto login(@RequestBody UserReqDto userReqDto) {
+        return userService.login(userReqDto);
+    }
+}

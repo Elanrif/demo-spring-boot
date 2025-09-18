@@ -1,13 +1,13 @@
-package com.elanrif.demo_spring_boot.controllers;
+package com.elanrif.inventory_management.controllers;
 
-import com.elanrif.demo_spring_boot.entities.Category;
-import com.elanrif.demo_spring_boot.services.CategoryService;
+import com.elanrif.inventory_management.entities.Category;
+import com.elanrif.inventory_management.services.CategoryService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 @RestController
-@RequestMapping("/categories")
+@RequestMapping("/api/categories")
 public class CategoryController {
     @Autowired
     CategoryService categoryService;

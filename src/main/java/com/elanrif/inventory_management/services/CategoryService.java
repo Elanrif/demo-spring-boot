@@ -1,7 +1,7 @@
-package com.elanrif.demo_spring_boot.services;
+package com.elanrif.inventory_management.services;
 
-import com.elanrif.demo_spring_boot.entities.Category;
-import com.elanrif.demo_spring_boot.repository.CategoryRepository;
+import com.elanrif.inventory_management.entities.Category;
+import com.elanrif.inventory_management.repository.CategoryRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
