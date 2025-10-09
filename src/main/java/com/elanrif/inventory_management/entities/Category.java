@@ -1,5 +1,6 @@
 package com.elanrif.inventory_management.entities;
 
+import com.elanrif.inventory_management.enums.CategoryEnum;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
@@ -16,14 +17,18 @@ import java.util.List;
 @Data
 @Entity
 public class Category {
-    @Id // Primary Key
-    @GeneratedValue(strategy = GenerationType.IDENTITY) // Automatic Increment
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer id;
     @OneToMany(mappedBy = "category")
     @JsonIgnore
     private List<Product> products;
+    @Column(nullable = false)
     private String name;
     private String description;
+    private Boolean isFeatured = false;
+    private String imageUrl;
+    private CategoryEnum status = CategoryEnum.INACTIVE;
     @CreationTimestamp
     private LocalDateTime createdAt;
     @UpdateTimestamp

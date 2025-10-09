@@ -53,6 +53,19 @@ public class UserService implements UserServiceImpl {
     }
 
     @Override
+    public User updateUser(UserReqDto userReqDto, Long id) {
+        User existingUser = userRepository.findById(id)
+                .orElseThrow(() -> new RuntimeException("Utilisateur non trouvé"));
+        // Mise à jour des champs
+        existingUser.setEmail(userReqDto.getEmail());
+        existingUser.setUsername(userReqDto.getUsername());
+        existingUser.setPhone(userReqDto.getPhone());
+        existingUser.setAddress(userReqDto.getAddress());
+        existingUser.setPassword(passwordEncoder.encode(userReqDto.getPassword()));
+        return userRepository.save(existingUser);
+    }
+
+    @Override
     public UserDto login(UserReqDto userReqDto) {
         User user = userRepository.findByEmail(userReqDto.getEmail())
                 .orElseThrow(() -> new RuntimeException("Utilisateur non trouvé"));
@@ -60,5 +73,11 @@ public class UserService implements UserServiceImpl {
             throw new RuntimeException("Mot de passe incorrect");
         }
         return userDtoMap.toDto(user);
+    }
+
+    @Override
+    public void deleteUser(Long id) {
+        User user = userRepository.findById(id).orElseThrow(() -> new RuntimeException("Utilisateur non trouvé"));
+        userRepository.deleteById(user.getId());
     }
 }
