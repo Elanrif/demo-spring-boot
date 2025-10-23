@@ -34,6 +34,11 @@ public class CategoryController {
         return categoryService.getAllCategories();
     }
 
+    @GetMapping("/desc")
+    public List<Category> getAllCategoriesDesc() {
+        return categoryService.getAllCategoriesDesc();
+    }
+
     @GetMapping("/{id}")
     public Category getCategoryById(@PathVariable("id") Integer id) {
         return categoryService.getCategoryById(id);

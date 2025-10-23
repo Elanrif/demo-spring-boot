@@ -15,4 +15,5 @@ public interface ProductRepository extends JpaRepository<Product,Integer> {
     *About name: ignoreCase, like, notLike, contain* and isNotContain* (all contains), endsWith*
     *About price:   lowerthanEqual, Equal,
     * */
+    List<Product> findByOrderByIdDesc();
 }

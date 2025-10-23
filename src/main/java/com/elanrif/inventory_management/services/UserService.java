@@ -80,4 +80,8 @@ public class UserService implements UserServiceImpl {
         User user = userRepository.findById(id).orElseThrow(() -> new RuntimeException("Utilisateur non trouvé"));
         userRepository.deleteById(user.getId());
     }
+    @Override
+    public List<User> fetchByOrderByIdDesc() {
+        return userRepository.findByOrderByIdDesc();
+    }
 }

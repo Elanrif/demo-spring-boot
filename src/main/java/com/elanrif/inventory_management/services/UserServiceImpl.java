@@ -12,4 +12,5 @@ public interface UserServiceImpl {
     User updateUser(UserReqDto userReqDto, Long id);
     UserDto login(UserReqDto userReqDto);
     void deleteUser(Long id);
+    List<User> fetchByOrderByIdDesc();
 }

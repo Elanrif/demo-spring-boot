@@ -9,5 +9,8 @@ public interface CategoryServiceImpl {
     Category updateCategory(Integer id, Category category);
     void deleteCategory(Integer id);
     List<Category> getAllCategories();
+
+    List<Category> getAllCategoriesDesc();
+
     Category getCategoryById(Integer id);
 }

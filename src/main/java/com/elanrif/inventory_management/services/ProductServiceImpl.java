@@ -10,5 +10,8 @@ public interface ProductServiceImpl {
     Product updateProduct(Integer id, Product product);
     void deleteProduct(Integer id);
     List<Product> getAllProducts();
+
+    List<Product> getAllProductsDesc();
+
     Product getProductById(Integer id);
 }

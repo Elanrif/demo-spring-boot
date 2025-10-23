@@ -25,6 +25,11 @@ public class UserController {
         return userService.getUserById(id);
     }
 
+    @GetMapping("/desc")
+    public List<User> fetchByOrderByIdDesc() {
+        return userService.fetchByOrderByIdDesc();
+    }
+
     @PostMapping("/register")
     public User register(@RequestBody UserReqDto userReqDto) {
         return userService.register(userReqDto);
