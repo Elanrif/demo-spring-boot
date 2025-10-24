@@ -26,8 +26,13 @@ public class UserService implements UserServiceImpl {
     private final PasswordEncoder passwordEncoder = new BCryptPasswordEncoder();
 
     @Override
-    public List<UserDto> getAllUsers() {
-        List<User> users= userRepository.findAll();
+    public List<UserDto> getAllUsers(String order) {
+        List<User> users;
+        if(order!=null && order.equalsIgnoreCase("desc") ){
+            users= userRepository.findAllByOrderByIdDesc();
+        } else {
+            users=userRepository.findAll();
+        }
         List<UserDto> userDtos = new ArrayList<>();
         for(User user:users){
             userDtos.add(userDtoMap.toDto(user));

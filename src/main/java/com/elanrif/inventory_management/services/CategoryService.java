@@ -41,7 +41,10 @@ public class CategoryService implements CategoryServiceImpl {
     }
 
     @Override
-    public List<Category> getAllCategories() {
+    public List<Category> getAllCategories(String order) {
+        if(order != null && order.equalsIgnoreCase("desc") ){
+            return categoryRepository.findAllByOrderByIdDesc();
+        }
         return categoryRepository.findAll();
     }
 
