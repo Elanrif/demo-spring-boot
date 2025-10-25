@@ -16,8 +16,8 @@ public class UserController {
     private UserService userService;
 
     @GetMapping
-    public List<UserDto> getAllUsers() {
-        return userService.getAllUsers();
+    public List<UserDto> getAllUsers(@RequestParam(value = "order", required = false) String order) {
+        return userService.getAllUsers(order);
     }
 
     @GetMapping("/{id}")
