@@ -2,6 +2,7 @@ package com.elanrif.inventory_management.services;
 
 import com.elanrif.inventory_management.dto.UserDto;
 import com.elanrif.inventory_management.dto.UserReqDto;
+import com.elanrif.inventory_management.entities.Category;
 import com.elanrif.inventory_management.entities.User;
 import com.elanrif.inventory_management.mapper.UserDtoMap;
 import com.elanrif.inventory_management.mapper.UserReqDtoMap;
@@ -33,6 +34,17 @@ public class UserService implements UserServiceImpl {
             userDtos.add(userDtoMap.toDto(user));
         }
         return userDtos;
+    }
+
+    @Override
+    public List<User> getAllUsers(String order) {
+
+        if (order.equalsIgnoreCase("desc")) {
+            return userRepository.findAllByOrderByIdDesc();
+        } else if (order.equalsIgnoreCase("asc")) {
+            return userRepository.findAllByOrderByIdAsc();
+        }
+        return userRepository.findAll();
     }
 
     @Override
@@ -80,8 +92,8 @@ public class UserService implements UserServiceImpl {
         User user = userRepository.findById(id).orElseThrow(() -> new RuntimeException("Utilisateur non trouvé"));
         userRepository.deleteById(user.getId());
     }
-    @Override
+   /* @Override
     public List<User> fetchByOrderByIdDesc() {
         return userRepository.findByOrderByIdDesc();
-    }
+    }*/
 }

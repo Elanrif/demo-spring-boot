@@ -2,6 +2,7 @@ package com.elanrif.inventory_management.controllers;
 
 import com.elanrif.inventory_management.dto.UserDto;
 import com.elanrif.inventory_management.dto.UserReqDto;
+import com.elanrif.inventory_management.entities.Category;
 import com.elanrif.inventory_management.entities.User;
 import com.elanrif.inventory_management.services.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -16,8 +17,8 @@ public class UserController {
     private UserService userService;
 
     @GetMapping
-    public List<UserDto> getAllUsers() {
-        return userService.getAllUsers();
+    public List<User> getAllUsers(@RequestParam(value = "order", required = false) String order) {
+        return userService.getAllUsers(order);
     }
 
     @GetMapping("/{id}")
@@ -25,10 +26,10 @@ public class UserController {
         return userService.getUserById(id);
     }
 
-    @GetMapping("/desc")
+   /* @GetMapping("/desc")
     public List<User> fetchByOrderByIdDesc() {
         return userService.fetchByOrderByIdDesc();
-    }
+    }*/
 
     @PostMapping("/register")
     public User register(@RequestBody UserReqDto userReqDto) {

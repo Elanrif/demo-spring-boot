@@ -30,13 +30,8 @@ public class CategoryController {
     }
 
     @GetMapping
-    public List<Category> getAllCategories() {
-        return categoryService.getAllCategories();
-    }
-
-    @GetMapping("/desc")
-    public List<Category> getAllCategoriesDesc() {
-        return categoryService.getAllCategoriesDesc();
+    public List<Category> getAllCategories(@RequestParam(value = "order", required = false) String order) {
+        return categoryService.getAllCategories(order);
     }
 
     @GetMapping("/{id}")
