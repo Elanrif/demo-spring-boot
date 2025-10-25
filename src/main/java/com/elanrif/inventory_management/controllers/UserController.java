@@ -8,7 +8,11 @@ import com.elanrif.inventory_management.services.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.ArrayList;
 import java.util.List;
+
+import static org.springframework.data.jpa.domain.AbstractPersistable_.id;
+
 @CrossOrigin(origins = "*")
 @RestController
 @RequestMapping("/api/users")
@@ -17,7 +21,7 @@ public class UserController {
     private UserService userService;
 
     @GetMapping
-    public List<User> getAllUsers(@RequestParam(value = "order", required = false) String order) {
+    public List<UserDto> getAllUsers(@RequestParam(value = "order", required = false) String order) {
         return userService.getAllUsers(order);
     }
 
@@ -25,11 +29,6 @@ public class UserController {
     public UserDto getUserById(@PathVariable Long id) {
         return userService.getUserById(id);
     }
-
-   /* @GetMapping("/desc")
-    public List<User> fetchByOrderByIdDesc() {
-        return userService.fetchByOrderByIdDesc();
-    }*/
 
     @PostMapping("/register")
     public User register(@RequestBody UserReqDto userReqDto) {

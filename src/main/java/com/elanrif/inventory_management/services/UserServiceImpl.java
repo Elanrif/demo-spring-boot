@@ -6,14 +6,11 @@ import com.elanrif.inventory_management.entities.User;
 import java.util.List;
 
 public interface UserServiceImpl {
-    List<UserDto> getAllUsers();
-
-    List<User> getAllUsers(String order);
-
+    List<UserDto> getAllUsers(String order);
     UserDto getUserById(Long id);
     User register(UserReqDto userReqDto);
     User updateUser(UserReqDto userReqDto, Long id);
     UserDto login(UserReqDto userReqDto);
     void deleteUser(Long id);
-    //List<User> fetchByOrderByIdDesc();
+
 }

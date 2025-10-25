@@ -2,7 +2,6 @@ package com.elanrif.inventory_management.services;
 
 import com.elanrif.inventory_management.dto.UserDto;
 import com.elanrif.inventory_management.dto.UserReqDto;
-import com.elanrif.inventory_management.entities.Category;
 import com.elanrif.inventory_management.entities.User;
 import com.elanrif.inventory_management.mapper.UserDtoMap;
 import com.elanrif.inventory_management.mapper.UserReqDtoMap;
@@ -24,27 +23,22 @@ public class UserService implements UserServiceImpl {
     @Autowired
     private UserReqDtoMap userReqDtoMap;
 
+
     private final PasswordEncoder passwordEncoder = new BCryptPasswordEncoder();
 
     @Override
-    public List<UserDto> getAllUsers() {
-        List<User> users= userRepository.findAll();
+    public List<UserDto> getAllUsers(String order) {
+        List<User> users;
+        if (order != null && order.equalsIgnoreCase("desc")) {
+            users = userRepository.findAllByOrderByIdDesc();
+        } else {
+            users = userRepository.findAll();
+        }
         List<UserDto> userDtos = new ArrayList<>();
-        for(User user:users){
+        for (User user : users) {
             userDtos.add(userDtoMap.toDto(user));
         }
         return userDtos;
-    }
-
-    @Override
-    public List<User> getAllUsers(String order) {
-
-        if (order.equalsIgnoreCase("desc")) {
-            return userRepository.findAllByOrderByIdDesc();
-        } else if (order.equalsIgnoreCase("asc")) {
-            return userRepository.findAllByOrderByIdAsc();
-        }
-        return userRepository.findAll();
     }
 
     @Override
@@ -92,8 +86,5 @@ public class UserService implements UserServiceImpl {
         User user = userRepository.findById(id).orElseThrow(() -> new RuntimeException("Utilisateur non trouvé"));
         userRepository.deleteById(user.getId());
     }
-   /* @Override
-    public List<User> fetchByOrderByIdDesc() {
-        return userRepository.findByOrderByIdDesc();
-    }*/
 }
+
