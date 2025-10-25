@@ -34,6 +34,12 @@ public class ProductController {
         return productService.getAllProducts();
     }
 
+    @GetMapping("/desc")
+    public List<Product> getAllProductsDesc() {
+        return productService.getAllProductsDesc();
+    }
+
+
     @GetMapping("/{id}")
     public Product getProductById(@PathVariable("id") Integer id) {
         return productService.getProductById(id);

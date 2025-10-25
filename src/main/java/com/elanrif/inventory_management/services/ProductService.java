@@ -4,7 +4,6 @@ import com.elanrif.inventory_management.dto.ProductReqDto;
 import com.elanrif.inventory_management.entities.Category;
 import com.elanrif.inventory_management.entities.Product;
 import com.elanrif.inventory_management.mapper.ProductReqDtoMap;
-import com.elanrif.inventory_management.mapper.ProductDtoMap;
 import com.elanrif.inventory_management.repository.CategoryRepository;
 import com.elanrif.inventory_management.repository.ProductRepository;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -59,6 +58,10 @@ public class ProductService implements ProductServiceImpl {
         return productRepository.findAll();
     }
 
+    @Override
+    public List<Product> getAllProductsDesc() {
+        return productRepository.findByOrderByIdDesc();
+    }
     @Override
     public Product getProductById(Integer id) {
         Product product = productRepository.findById(id).orElse(null);
