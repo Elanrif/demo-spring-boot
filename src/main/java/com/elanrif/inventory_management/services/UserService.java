@@ -2,6 +2,7 @@ package com.elanrif.inventory_management.services;
 
 import com.elanrif.inventory_management.dto.UserDto;
 import com.elanrif.inventory_management.dto.UserReqDto;
+import com.elanrif.inventory_management.entities.Category;
 import com.elanrif.inventory_management.entities.User;
 import com.elanrif.inventory_management.mapper.UserDtoMap;
 import com.elanrif.inventory_management.mapper.UserReqDtoMap;
@@ -26,10 +27,12 @@ public class UserService implements UserServiceImpl {
     private final PasswordEncoder passwordEncoder = new BCryptPasswordEncoder();
 
     @Override
-    public List<UserDto> getAllUsers() {
-        List<User> users= userRepository.findAll();
+    public List<UserDto> getAllUsers(String order) {
+        List<User> users = order != null && order.equalsIgnoreCase("desc")
+                ? userRepository.findAllByOrderByIdDesc()
+                : userRepository.findAll();
         List<UserDto> userDtos = new ArrayList<>();
-        for(User user:users){
+        for (User user : users) {
             userDtos.add(userDtoMap.toDto(user));
         }
         return userDtos;

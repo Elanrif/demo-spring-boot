@@ -6,7 +6,7 @@ import com.elanrif.inventory_management.entities.User;
 import java.util.List;
 
 public interface UserServiceImpl {
-    List<UserDto> getAllUsers();
+    List<UserDto> getAllUsers(String order);
     UserDto getUserById(Long id);
     User register(UserReqDto userReqDto);
     User updateUser(UserReqDto userReqDto, Long id);
