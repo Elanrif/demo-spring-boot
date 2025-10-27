@@ -57,4 +57,4 @@ This roadmap provides a step-by-step approach to understanding and implementing 
 
 Below is a visual representation of the JWT roadmap:
 
-![JWT Roadmap](jwt-roadmap.png)
+<img src="jwt-roadmap.png" alt="JWT Roadmap" width="1000">
