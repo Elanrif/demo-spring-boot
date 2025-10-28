@@ -78,25 +78,6 @@ public class AuthController {
                 roles));
     }
 
-    @PostMapping("/refreshToken")
-    public ResponseEntity<?> refreshtoken(@Valid @RequestBody TokenRefreshRequest request) {
-        String requestRefreshToken = request.getRefreshToken();
-
-        return refreshTokenService.findByToken(requestRefreshToken)
-                .map(refreshTokenService::verifyExpiration)
-                .map(RefreshToken::getUser)
-                .map(user -> {
-                    String token = jwtUtils.generateTokenFromUsername(user.getEmail());
-                    System.out.println("refreshtoken: generated new access token for user -> [" + user.getEmail() + "]");
-                    return ResponseEntity.ok(new TokenRefreshResponse(token, requestRefreshToken));
-                })
-                .orElseThrow(() -> {
-                    // log plus d'info pour debug
-                    System.err.println("refreshtoken: token not found in DB -> [" + requestRefreshToken + "]");
-                    return new TokenRefreshException(requestRefreshToken, "Refresh token is not in database!");
-                });
-    }
-
     @PostMapping("/signup")
     public ResponseEntity<?> registerUser(@Valid @RequestBody SignupRequest signUpRequest) {
         if (userRepository.existsByUsername(signUpRequest.getUsername())) {
@@ -150,5 +131,32 @@ public class AuthController {
         userRepository.save(user);
 
         return ResponseEntity.ok(new MessageResponse("User registered successfully!"));
+    }
+
+    @PostMapping("/refreshToken")
+    public ResponseEntity<?> refreshtoken(@Valid @RequestBody TokenRefreshRequest request) {
+        String requestRefreshToken = request.getRefreshToken();
+
+        return refreshTokenService.findByToken(requestRefreshToken)
+                .map(refreshTokenService::verifyExpiration)
+                .map(RefreshToken::getUser)
+                .map(user -> {
+                    String token = jwtUtils.generateTokenFromUsername(user.getEmail());
+                    System.out.println("refreshtoken: generated new access token for user -> [" + user.getEmail() + "]");
+                    return ResponseEntity.ok(new TokenRefreshResponse(token, requestRefreshToken));
+                })
+                .orElseThrow(() -> {
+                    // log plus d'info pour debug
+                    System.err.println("refreshtoken: token not found in DB -> [" + requestRefreshToken + "]");
+                    return new TokenRefreshException(requestRefreshToken, "Refresh token is not in database!");
+                });
+    }
+
+    @PostMapping("/logout")
+    public ResponseEntity<?> logoutUser() {
+        UserDetailsImpl userDetails = (UserDetailsImpl) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+        Long userId = userDetails.getId();
+        refreshTokenService.deleteByUserId(userId);
+        return ResponseEntity.ok(new MessageResponse("Log out successful!"));
     }
 }

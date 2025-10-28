@@ -15,8 +15,8 @@ public class RefreshToken {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private long id;
-
-    @ManyToOne
+    //Todo: change to ManyToOne so we can generate many refresh tokens ❌
+    @OneToOne
     private User user;
 
     @Column(nullable = false, unique = true)
