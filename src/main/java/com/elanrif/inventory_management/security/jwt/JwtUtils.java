@@ -20,27 +20,24 @@ public class JwtUtils {
     @Value("${inventory-management.app.jwtSecret}")
     private String jwtSecret;
 
-    @Value("${inventory-management.app.jwtExpiration}")
+    @Value("${inventory-management.app.jwtExpirationMs}")
     private int jwtExpirationMs;
 
-    public String generateJwtToken(Authentication authentication) {
+    public String generateJwtToken(UserDetailsImpl userPrincipal) {
+        return generateTokenFromUsername(userPrincipal.getEmail());
+    }
 
-        UserDetailsImpl userPrincipal = (UserDetailsImpl) authentication.getPrincipal();
-        // TODO: Changed getUsername() to getEmail() for testing purposes, revert it back after testing
+    public String generateTokenFromUsername(String username) {
         return Jwts.builder()
-                .setSubject(userPrincipal.getEmail())
+                .setSubject(username)
                 .setIssuedAt(new Date())
                 .setExpiration(new Date((new Date()).getTime() + jwtExpirationMs))
-                .signWith(key(), SignatureAlgorithm.HS256)
+                .signWith(SignatureAlgorithm.HS512, jwtSecret)
                 .compact();
     }
 
-    private Key key() {
-        return Keys.hmacShaKeyFor(Decoders.BASE64.decode(jwtSecret));
-    }
-
     public String getUserNameFromJwtToken(String token) {
-        return Jwts.parserBuilder().setSigningKey(key()).build()
+        return Jwts.parser().setSigningKey(jwtSecret)
                 .parseClaimsJws(token)
                 .getBody()
                 .getSubject();
@@ -48,7 +45,7 @@ public class JwtUtils {
 
     public boolean validateJwtToken(String authToken) {
         try {
-            Jwts.parserBuilder().setSigningKey(key()).build().parse(authToken);
+            Jwts.parser().setSigningKey(jwtSecret).parseClaimsJws(authToken);
             return true;
         }catch (MalformedJwtException e) {
             logger.error("Invalid JWT token: {}", e.getMessage());

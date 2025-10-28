@@ -1,16 +1,21 @@
 package com.elanrif.inventory_management.controllers;
 
+import com.elanrif.inventory_management.entities.RefreshToken;
 import com.elanrif.inventory_management.entities.Role;
 import com.elanrif.inventory_management.entities.User;
 import com.elanrif.inventory_management.enums.ERole;
+import com.elanrif.inventory_management.exception.TokenRefreshException;
 import com.elanrif.inventory_management.payload.request.LoginRequest;
 import com.elanrif.inventory_management.payload.request.SignupRequest;
+import com.elanrif.inventory_management.payload.request.TokenRefreshRequest;
 import com.elanrif.inventory_management.payload.response.JwtResponse;
 import com.elanrif.inventory_management.payload.response.MessageResponse;
+import com.elanrif.inventory_management.payload.response.TokenRefreshResponse;
 import com.elanrif.inventory_management.repository.RoleRepository;
 import com.elanrif.inventory_management.repository.UserRepository;
 import com.elanrif.inventory_management.security.jwt.JwtUtils;
 import com.elanrif.inventory_management.security.services.UserDetailsImpl;
+import com.elanrif.inventory_management.security.services.RefreshTokenService;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
@@ -45,6 +50,9 @@ public class AuthController {
     @Autowired
     JwtUtils jwtUtils;
 
+    @Autowired
+    RefreshTokenService refreshTokenService;
+
     @PostMapping("/signin")
     public ResponseEntity<?> authenticateUser(@Valid @RequestBody LoginRequest loginRequest) {
 
@@ -52,18 +60,37 @@ public class AuthController {
                 new UsernamePasswordAuthenticationToken(loginRequest.getEmail(), loginRequest.getPassword())
         );
         SecurityContextHolder.getContext().setAuthentication(authentication);
-        String jwt = jwtUtils.generateJwtToken(authentication);
-
         UserDetailsImpl userDetails = (UserDetailsImpl) authentication.getPrincipal();
+
+        String jwt = jwtUtils.generateJwtToken(userDetails);
+
         List<String> roles = userDetails.getAuthorities().stream()
                 .map(item -> item.getAuthority())
                 .collect(Collectors.toList());
 
+        RefreshToken refreshToken = refreshTokenService.createRefreshToken(userDetails.getId());
+
         return ResponseEntity.ok(new JwtResponse(jwt,
+                refreshToken.getToken(),
                 userDetails.getId(),
                 userDetails.getUsername(),
                 userDetails.getEmail(),
                 roles));
+    }
+
+    @PostMapping("/refreshtoken")
+    public ResponseEntity<?> refreshtoken(@Valid @RequestBody TokenRefreshRequest request) {
+        String requestRefreshToken = request.getRefreshToken();
+
+        return refreshTokenService.findByToken(requestRefreshToken)
+                .map(refreshTokenService::verifyExpiration)
+                .map(RefreshToken::getUser)
+                .map(user -> {
+                    String token = jwtUtils.generateTokenFromUsername(user.getEmail());
+                    return ResponseEntity.ok(new TokenRefreshResponse(token, requestRefreshToken));
+                })
+                .orElseThrow(() -> new TokenRefreshException(requestRefreshToken,
+                        "Refresh token is not in database!"));
     }
 
     @PostMapping("/signup")
