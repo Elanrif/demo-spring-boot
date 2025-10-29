@@ -8,11 +8,10 @@ import com.elanrif.inventory_management.payload.request.SignupRequest;
 import java.util.List;
 
 public interface UserServiceImpl {
-    List<User> getAllUsers();
+    List<User> getAllUsers(String order);
     User getUserById(Long id);
-    User register(UserReqDto userReqDto);
     User updateUser(UserReqDto userReqDto, Long id);
     UserDto login(UserReqDto userReqDto);
     void deleteUser(Long id);
-    User signUp(SignupRequest signUpRequest);
+    User register(SignupRequest signupRequest);
 }

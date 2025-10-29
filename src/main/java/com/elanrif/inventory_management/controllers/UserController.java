@@ -3,8 +3,10 @@ package com.elanrif.inventory_management.controllers;
 import com.elanrif.inventory_management.dto.UserDto;
 import com.elanrif.inventory_management.dto.UserReqDto;
 import com.elanrif.inventory_management.entities.User;
+import com.elanrif.inventory_management.payload.request.SignupRequest;
 import com.elanrif.inventory_management.services.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -17,8 +19,8 @@ public class UserController {
 
     @GetMapping
     @PreAuthorize("hasAnyRole('ADMIN', 'MODERATOR')")
-    public List<User> getAllUsers() {
-        return userService.getAllUsers();
+    public List<User> getAllUsers(@RequestParam(value= "order", required = false) String order) {
+        return userService.getAllUsers(order);
     }
 
     @GetMapping("/{id}")
@@ -27,8 +29,8 @@ public class UserController {
     }
 
     @PostMapping("/register")
-    public User register(@RequestBody UserReqDto userReqDto) {
-        return userService.register(userReqDto);
+    public User register(@RequestBody SignupRequest signupRequest) {
+        return userService.register(signupRequest);
     }
 
     @PostMapping("/login")

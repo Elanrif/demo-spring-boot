@@ -32,7 +32,10 @@ public class UserService implements UserServiceImpl {
     private final PasswordEncoder passwordEncoder = new BCryptPasswordEncoder();
 
     @Override
-    public List<User> getAllUsers() {
+    public List<User> getAllUsers(String order) {
+        if (order != null && order.equalsIgnoreCase("desc")) {
+            return userRepository.findAllByOrderByIdDesc();
+        }
        return userRepository.findAll();
     }
 
@@ -40,16 +43,6 @@ public class UserService implements UserServiceImpl {
     public User getUserById(Long id) {
         return userRepository.findById(id)
                 .orElseThrow(() -> new RuntimeException("Utilisateur non trouvé"));
-    }
-
-    @Override
-    public User register(UserReqDto userReqDto) {
-        if (userRepository.findByEmail(userReqDto.getEmail()).isPresent()) {
-            throw new RuntimeException("Email déjà utilisé");
-        }
-        User user = userReqDtoMap.toEntity(userReqDto);
-        user.setPassword(passwordEncoder.encode(userReqDto.getPassword()));
-        return userRepository.save(user);
     }
 
     @Override
@@ -82,7 +75,7 @@ public class UserService implements UserServiceImpl {
     }
 
     @Override
-    public User signUp(SignupRequest signupRequest) {
+    public User register(SignupRequest signupRequest) {
         if (userRepository.existsByUsername(signupRequest.getUsername())) {
             throw new RuntimeException("Error: Username is already taken!");
         }
@@ -130,4 +123,5 @@ public class UserService implements UserServiceImpl {
         user.setRoles(roles);
         return userRepository.save(user);
     }
+
 }
