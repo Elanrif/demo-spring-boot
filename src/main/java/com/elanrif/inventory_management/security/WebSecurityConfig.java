@@ -7,6 +7,7 @@ import jakarta.servlet.Filter;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.http.HttpMethod;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.dao.DaoAuthenticationProvider;
 import org.springframework.security.config.annotation.authentication.configuration.AuthenticationConfiguration;
@@ -20,7 +21,8 @@ import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 
 @Configuration
-@EnableMethodSecurity
+// enable pre/post annotations so @PreAuthorize works
+@EnableMethodSecurity(prePostEnabled = true)
 public class WebSecurityConfig {
     @Autowired
     UserDetailsServiceImpl userDetailsService;
@@ -58,9 +60,14 @@ public class WebSecurityConfig {
                 .exceptionHandling(exception  -> exception.authenticationEntryPoint(unauthorizedHandler))
                 .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
                 .authorizeHttpRequests(auth ->
-                        auth.requestMatchers("/api/auth/**","/api/products/**").permitAll()
+                        auth
+                                .requestMatchers("/api/auth/**","/error").permitAll()
+                                .requestMatchers(HttpMethod.GET,"/api/products/**", "/api/categories/**").permitAll()
+                                .requestMatchers(HttpMethod.POST, "/api/products/**").hasRole("ADMIN")
+                                .requestMatchers(HttpMethod.PUT, "/api/products/**", "/api/categories/**").authenticated()
+                                .requestMatchers(HttpMethod.DELETE, "/api/products/**").hasAnyRole("ADMIN","MODERATOR")
                                 .anyRequest().authenticated()
-                        );
+                );
         http.authenticationProvider(authenticationProvider());
         /*TODO: cast to Filter*/
         http.addFilterBefore((Filter) authenticationJwtTokenFilter(), UsernamePasswordAuthenticationFilter.class);

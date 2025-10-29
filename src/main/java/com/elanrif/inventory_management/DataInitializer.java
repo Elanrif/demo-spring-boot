@@ -53,7 +53,9 @@ public class DataInitializer implements CommandLineRunner {
                 .username("admin")
                 .password("admin123")
                 .email("admin@gmail.com")
-                .role(Set.of("admin", "moderator"))
+                .phone("+212612345678")
+                .address("123 Admin St, City, Country")
+                .roles(Set.of("admin", "moderator"))
                 .build();
         if (userRepository.findByUsername("admin").isEmpty()) {
             userService.signUp(adminSignupRequest);

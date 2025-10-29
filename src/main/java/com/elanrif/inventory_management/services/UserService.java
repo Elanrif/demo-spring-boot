@@ -14,8 +14,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
-
-import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
@@ -34,20 +32,14 @@ public class UserService implements UserServiceImpl {
     private final PasswordEncoder passwordEncoder = new BCryptPasswordEncoder();
 
     @Override
-    public List<UserDto> getAllUsers() {
-        List<User> users= userRepository.findAll();
-        List<UserDto> userDtos = new ArrayList<>();
-        for(User user:users){
-            userDtos.add(userDtoMap.toDto(user));
-        }
-        return userDtos;
+    public List<User> getAllUsers() {
+       return userRepository.findAll();
     }
 
     @Override
-    public UserDto getUserById(Long id) {
+    public User getUserById(Long id) {
         return userRepository.findById(id)
-                .map(userDtoMap::toDto)
-                .orElse(null);
+                .orElseThrow(() -> new RuntimeException("Utilisateur non trouvé"));
     }
 
     @Override
@@ -99,11 +91,15 @@ public class UserService implements UserServiceImpl {
             throw new RuntimeException("Error: Email is already in use!");
         }
 
-        User user = new User(signupRequest.getUsername(),
-                signupRequest.getEmail(),
-                passwordEncoder.encode(signupRequest.getPassword()));
+        User user = User.builder()
+                .username(signupRequest.getUsername())
+                .password(passwordEncoder.encode(signupRequest.getPassword()))
+                .email(signupRequest.getEmail())
+                .phone(signupRequest.getPhone())
+                .address(signupRequest.getAddress())
+                .build();
 
-        Set<String> strRoles = signupRequest.getRole();
+        Set<String> strRoles = signupRequest.getRoles();
         Set<Role> roles = new HashSet<>();
 
         if (strRoles == null) {

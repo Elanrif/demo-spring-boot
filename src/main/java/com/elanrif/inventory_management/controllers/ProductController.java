@@ -14,6 +14,16 @@ public class ProductController {
     @Autowired
     ProductService productService;
 
+    @GetMapping()
+    public List<Product> getAllProducts() {
+        return productService.getAllProducts();
+    }
+
+    @GetMapping("/{id}")
+    public Product getProductById(@PathVariable("id") Integer id) {
+        return productService.getProductById(id);
+    }
+
     @PostMapping
     public Product createProduct(@RequestBody ProductReqDto productReqDto) {
         return productService.createProduct(productReqDto);
@@ -29,13 +39,4 @@ public class ProductController {
       productService.deleteProduct(id);
     }
 
-    @GetMapping()
-    public List<Product> getAllProducts() {
-        return productService.getAllProducts();
-    }
-
-    @GetMapping("/{id}")
-    public Product getProductById(@PathVariable("id") Integer id) {
-        return productService.getProductById(id);
-    }
 }
