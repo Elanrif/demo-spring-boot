@@ -16,8 +16,8 @@ public class CategoryController {
     CategoryService categoryService;
 
     @GetMapping
-    public List<Category> getAllCategories() {
-        return categoryService.getAllCategories();
+    public List<Category> getAllCategories(@RequestParam(value= "order", required = false) String order) {
+        return categoryService.getAllCategories(order);
     }
 
     @GetMapping("/{id}")
