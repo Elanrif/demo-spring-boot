@@ -2,23 +2,28 @@ package com.elanrif.inventory_management.services;
 
 import com.elanrif.inventory_management.dto.UserDto;
 import com.elanrif.inventory_management.dto.UserReqDto;
-import com.elanrif.inventory_management.entities.Category;
+import com.elanrif.inventory_management.entities.Role;
 import com.elanrif.inventory_management.entities.User;
+import com.elanrif.inventory_management.enums.ERole;
 import com.elanrif.inventory_management.mapper.UserDtoMap;
 import com.elanrif.inventory_management.mapper.UserReqDtoMap;
+import com.elanrif.inventory_management.payload.request.SignupRequest;
+import com.elanrif.inventory_management.repository.RoleRepository;
 import com.elanrif.inventory_management.repository.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
-
-import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 @Service
 public class UserService implements UserServiceImpl {
     @Autowired
     private UserRepository userRepository;
+    @Autowired
+    private RoleRepository roleRepository;
     @Autowired
     private UserDtoMap userDtoMap;
     @Autowired
@@ -27,32 +32,17 @@ public class UserService implements UserServiceImpl {
     private final PasswordEncoder passwordEncoder = new BCryptPasswordEncoder();
 
     @Override
-    public List<UserDto> getAllUsers(String order) {
-        List<User> users = order != null && order.equalsIgnoreCase("desc")
-                ? userRepository.findAllByOrderByIdDesc()
-                : userRepository.findAll();
-        List<UserDto> userDtos = new ArrayList<>();
-        for (User user : users) {
-            userDtos.add(userDtoMap.toDto(user));
+    public List<User> getAllUsers(String order) {
+        if (order != null && order.equalsIgnoreCase("desc")) {
+            return userRepository.findAllByOrderByIdDesc();
         }
-        return userDtos;
+       return userRepository.findAll();
     }
 
     @Override
-    public UserDto getUserById(Long id) {
+    public User getUserById(Long id) {
         return userRepository.findById(id)
-                .map(userDtoMap::toDto)
-                .orElse(null);
-    }
-
-    @Override
-    public User register(UserReqDto userReqDto) {
-        if (userRepository.findByEmail(userReqDto.getEmail()).isPresent()) {
-            throw new RuntimeException("Email déjà utilisé");
-        }
-        User user = userReqDtoMap.toEntity(userReqDto);
-        user.setPassword(passwordEncoder.encode(userReqDto.getPassword()));
-        return userRepository.save(user);
+                .orElseThrow(() -> new RuntimeException("Utilisateur non trouvé"));
     }
 
     @Override
@@ -83,4 +73,55 @@ public class UserService implements UserServiceImpl {
         User user = userRepository.findById(id).orElseThrow(() -> new RuntimeException("Utilisateur non trouvé"));
         userRepository.deleteById(user.getId());
     }
+
+    @Override
+    public User register(SignupRequest signupRequest) {
+        if (userRepository.existsByUsername(signupRequest.getUsername())) {
+            throw new RuntimeException("Error: Username is already taken!");
+        }
+
+        if (userRepository.existsByEmail(signupRequest.getEmail())) {
+            throw new RuntimeException("Error: Email is already in use!");
+        }
+
+        User user = User.builder()
+                .username(signupRequest.getUsername())
+                .password(passwordEncoder.encode(signupRequest.getPassword()))
+                .email(signupRequest.getEmail())
+                .phone(signupRequest.getPhone())
+                .address(signupRequest.getAddress())
+                .build();
+
+        Set<String> strRoles = signupRequest.getRoles();
+        Set<Role> roles = new HashSet<>();
+
+        if (strRoles == null) {
+            Role userRole = roleRepository.findByName(ERole.ROLE_USER)
+                    .orElseThrow(() -> new RuntimeException("Error: Role is not found."));
+            roles.add(userRole);
+        } else {
+            strRoles.forEach(role -> {
+                switch (role) {
+                    case "admin":
+                        Role adminRole = roleRepository.findByName(ERole.ROLE_ADMIN)
+                                .orElseThrow(() -> new RuntimeException("Error: Role is not found."));
+                        roles.add(adminRole);
+                        break;
+                    case "moderator":
+                        Role modRole = roleRepository.findByName(ERole.ROLE_MODERATOR)
+                                .orElseThrow(() -> new RuntimeException("Error: Role is not found."));
+                        roles.add(modRole);
+                        break;
+                    default:
+                        Role defaultRole = roleRepository.findByName(ERole.ROLE_USER)
+                                .orElseThrow(() -> new RuntimeException("Error: Role is not found."));
+                        roles.add(defaultRole);
+                }
+            });
+        }
+
+        user.setRoles(roles);
+        return userRepository.save(user);
+    }
+
 }
