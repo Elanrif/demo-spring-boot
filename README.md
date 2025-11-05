@@ -1,5 +1,19 @@
 ﻿# inventory-management
 
+## Spring Initializr — creating a starter project
+
+![Spring Initializr](spring initializr.png)
+
+Follow these steps on https://start.spring.io to generate a new Spring Boot project that matches your environment:
+
+- Change the Group: replace the default group (for example `com.example`) with your own group id (for example `com.yourname` or `io.yourname`). This determines the base package for the generated sources.
+- Modify the Artifact: set the Artifact field to the artifact id you want. When you change the Artifact, the `Name` and `Package Name` fields in the form are updated automatically — so you don't need to edit them separately.
+- Choose Java version: at the bottom of the form select the Java version that matches your machine (for example 17 or 21). Pick the version installed on your system to avoid compatibility problems.
+- (Optional) Select packaging (Jar/War), language (Java/Kotlin/Groovy) and add dependencies (e.g., Spring Web, Spring Security, Spring Data JPA) before generating the project.
+
+After you download the ZIP, extract it and import the project into your IDE (Import as Maven/Gradle project).
+
+
 ## Generate a Secure Key for Signing JWTs
 
 To generate a secure 256-bit (32-byte) key for signing your JWTs, you can use the following command on Linux:

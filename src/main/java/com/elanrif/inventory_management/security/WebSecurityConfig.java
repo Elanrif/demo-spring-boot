@@ -67,7 +67,7 @@ public class WebSecurityConfig {
                 .authorizeHttpRequests(auth ->
                         auth
                                 .requestMatchers("/api/auth/**","/error").permitAll()
-                                .requestMatchers(HttpMethod.GET,"/api/products/**", "/api/categories/**").permitAll()
+                                .requestMatchers(HttpMethod.GET,"/api/productss/**", "/api/categoriess/**").permitAll()
                                 .requestMatchers(HttpMethod.POST, "/api/products/**").hasRole("ADMIN")
                                 .requestMatchers(HttpMethod.PUT, "/api/products/**", "/api/categories/**").authenticated()
                                 .requestMatchers(HttpMethod.DELETE, "/api/products/**").hasAnyRole("ADMIN","MODERATOR")
@@ -86,7 +86,7 @@ public class WebSecurityConfig {
         config.setAllowedOriginPatterns(List.of("*"));
         // En prod, préférez List.of("https://example.com") ou la liste de vos origines
         config.setAllowedMethods(List.of("GET", "POST", "PUT", "DELETE", "OPTIONS"));
-        config.setAllowedHeaders(List.of("Authorization", "Content-Type", "Accept", "Origin", "X-Requested-With"));
+        config.setAllowedHeaders(List.of("Authorization", "Content-Type","Cache-Control", "Accept", "Origin", "X-Requested-With"));
         config.setExposedHeaders(List.of("Authorization"));
         config.setAllowCredentials(true); // si vous utilisez des cookies/credentials
         UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
