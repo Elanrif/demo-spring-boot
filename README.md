@@ -2,7 +2,7 @@
 
 ## Spring Initializr — creating a starter project
 
-![Spring Initializr](spring initializr.png)
+![Spring Initializr](spring-initializr.png)
 
 Follow these steps on https://start.spring.io to generate a new Spring Boot project that matches your environment:
 
